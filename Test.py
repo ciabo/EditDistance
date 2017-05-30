@@ -2,37 +2,36 @@ import editD
 import divide
 
 
-def testEdit():
-    query = input("Insert name: ")
+def testEdit(query, distance):
     names = open("C:\\Users\\Luca\\PycharmProjects\\ngramEditDistance\\nomi.txt", "r")
-    value = []
-    query += "\n"
+    list = []
     for i in names:
-        m = editD.editDistance(query, i)
-        if m <= 1:
-            value.append(i)
-    print(value)
+        name=i[:len(i)-1]
+        m = editD.editDistance(query, name)
+        if m <= int(distance):
+            list.append(name)
+    return list
 
 
-def testNgram():
+def testNgram(query, distance, n):
     nGramQuery = []
-    query = input("Insert name: ")
-    n = input("Insert dimension of grams: ")
-    distance = input("Insert the max distance: ")
     #Divide name in ngrams
     if int(n)==2:
         nGramQuery=divide.bigram(query)
-        print(nGramQuery)
     if int(n)==3:
         nGramQuery=divide.trigram(query)
 
+    list = []
     for gram in nGramQuery:
-        words=open("C:\\Users\\Luca\\PycharmProjects\\ngramEditDistance\\"+gram+".txt", "r")
-        list=[]
+        if int(n)==2:
+            words=open("C:\\Users\\Luca\\PycharmProjects\\ngramEditDistance\\2gram\\"+gram+"-gram.txt", "r")
+        else:
+            words = open("C:\\Users\\Luca\\PycharmProjects\\ngramEditDistance\\3gram\\" + gram + "-gram.txt", "r")
+
         for w in words:
             name=w[:len(w)-1]
             editDistance=editD.editDistance(query,name)
             if(editDistance<=int(distance)):
-                list.append(name)
-    for element in list:
-        print(element)
+                if name not in list:
+                    list.append(name)
+    return list
